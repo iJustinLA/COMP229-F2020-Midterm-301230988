@@ -26,44 +26,104 @@ router.get('/', (req, res, next) => {
 //  GET the Book Details page in order to add a new Book
 router.get('/add', (req, res, next) => {
 
-    /*****************
-     * ADD CODE HERE *
-     *****************/
-
+    res.render('books/details', {
+      title: 'Add a New Book',
+      books: []
+    });
 });
 
 // POST process the Book Details page and create a new Book - CREATE
 router.post('/add', (req, res, next) => {
 
-    /*****************
-     * ADD CODE HERE *
-     *****************/
+  const title = req.body.title;
+  const price = req.body.price;
+  const author = req.body.author;
+  const genre = req.body.genre;
 
+  // Create a new book object
+  const newBook = new book({
+    Title: title,
+    Price: price,
+    Author: author,
+    Genre: genre
+  });
+
+  // Save the new book to the database
+  book.create(newBook, (err, book) => {
+    if (err) {
+      console.error(err);
+    } else {
+      console.log('New book has been added:', book);
+      res.redirect('/books');
+    }
+  });
 });
 
 // GET the Book Details page in order to edit an existing Book
 router.get('/:id', (req, res, next) => {
 
-    /*****************
-     * ADD CODE HERE *
-     *****************/
+  const id = req.params.id;
+
+  // Find the book in the database by ID
+  book.findById(id, (err, foundBook) => {
+    if (err) {
+      console.error(err);
+    } else {
+      res.render('books/details', {
+        title: 'Book Details',
+        books: foundBook
+      });
+    }
+  });
 });
 
 // POST - process the information passed from the details form and update the document
 router.post('/:id', (req, res, next) => {
 
-    /*****************
-     * ADD CODE HERE *
-     *****************/
+  const id = req.params.id;
+
+  // Extract the values from req.body
+  const title = req.body.title;
+  const price = req.body.price;
+  const author = req.body.author;
+  const genre = req.body.genre;
+
+  // Create a new book object with the updated values
+  const updatedBook = {
+    _id: id,
+    Title: title,
+    Price: price,
+    Author: author,
+    Genre: genre
+  };
+
+  // Update the book in the database
+  book.updateOne({ _id: id }, updatedBook, (err) => {
+    if (err) {
+      console.error(err);
+    } else {
+      console.log('Book has been updated:', updatedBook);
+      res.redirect('/books');
+      }
+      });
 
 });
 
 // GET - process the delete by user id
 router.get('/delete/:id', (req, res, next) => {
 
-    /*****************
-     * ADD CODE HERE *
-     *****************/
+// Retrieve the book ID from the URL
+const id = req.params.id;
+
+// Remove the book from the database by ID
+book.remove({ _id: id }, (err) => {
+if (err) {
+console.error(err);
+} else {
+console.log('Book has been deleted');
+res.redirect('/books');
+}
+});
 });
 
 
