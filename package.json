@@ -52,10 +52,10 @@
     "ExpressJS",
     "EJS"
   ],
-  "author": "Your Name Goes Here",
+  "author": "Justin Amaral",
   "license": "ISC",
   "bugs": {
-    "url": ""
+    "url": "https://walrus-app-ublrm.ondigitalocean.app/"
   },
   "homepage": ""
 }
