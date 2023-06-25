@@ -4,12 +4,12 @@ let router = express.Router();
 let mongoose = require('mongoose');
 
 // define the book model
-let book = require('../models/books');
+let Book = require('../models/books');
 
 /* GET books List page. READ */
 router.get('/', (req, res, next) => {
   // find all books in the books collection
-  book.find((err, books) => {
+  Book.find((err, books) => {
     if (err) {
       return console.error(err);
     }
@@ -33,7 +33,7 @@ router.get('/add', (req, res, next) => {
 // POST process the Book Details page and create a new Book - CREATE
 router.post('/add', (req, res, next) => {
 
-  let newBook = Book({
+  let newBook = new Book({
     "title": req.body.title,
     "description": req.body.description,
     "price": req.body.price,
@@ -41,7 +41,7 @@ router.post('/add', (req, res, next) => {
     "genre": req.body.genre
   });
 
-  Book.create(newBook, (err, Book) => {
+  Book.create(newBook, (err, book) => {
     if (err) {
       console.log(err);
       res.end(err);
@@ -65,7 +65,7 @@ router.get('/:id', (req, res, next) => {
     }
     else {
       //show the edit view
-      res.render('books/edit', { title: 'Edit Book', books: bookToEdit })
+      res.render('books/edit', { title: 'Edit Book', book: bookToEdit })
     }
   });
 });
@@ -75,14 +75,14 @@ router.post('/:id', (req, res, next) => {
 
   let id = req.params.id
 
-  let updatedBook = Book({
+  let updatedBook = {
     "_id": id,
     "title": req.body.title,
     "description": req.body.description,
     "price": req.body.price,
     "author": req.body.author,
     "genre": req.body.genre
-  });
+  };
 
   Book.updateOne({ _id: id }, updatedBook, (err) => {
     if (err) {
